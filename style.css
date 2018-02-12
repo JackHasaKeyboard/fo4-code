@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+
+* {
+	font-family: 'Share Tech Mono';
+	color: rgb(26, 255, 128);
+	white-space: pre;
+}
+
+body {
+	background: #161616;
+}
+
+#active,
+#active * {
+	background: rgb(26, 255, 128);
+	color: #161616;
+}
+
+a {
+	display: block;
+	cursor: pointer;
+}
