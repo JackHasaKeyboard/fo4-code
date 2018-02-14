@@ -16,6 +16,7 @@ $(document).ready(async function() {
 	}
 
 
+	var mode = 'splash';
 	var crawl = true;
 
 	await print('body', 'div', 'Welcome to ROBCO Industries (TM) Termlink');
@@ -28,18 +29,24 @@ $(document).ready(async function() {
 		var list = Object.keys(item);
 
 		async function splash() {
+			mode = 'splash';
+
 			$('#item').empty();
 
 			crawl = true;
 
 			for (let i = 0; i < list.length; i++) {
-				await print('#item', 'a', '[ ' + list[i] + ' ]');
+				if (mode == 'splash') {
+					await print('#item', 'a', '[ ' + list[i] + ' ]');
+				}
 			}
 		}
 
 		splash();
 
 		async function query(cat) {
+			mode = 'query';
+
 			$('#item').empty();
 
 			crawl = true;
@@ -52,10 +59,12 @@ $(document).ready(async function() {
 			var pad = 0;
 
 			for (let i = 0; i < name.length; i++) {
-				var entry = name[i];
+				if (mode == 'query') {
+					var entry = name[i];
 
-				if (entry.length > pad) {
-					pad = entry.length;
+					if (entry.length > pad) {
+						pad = entry.length;
+					}
 				}
 			}
 
