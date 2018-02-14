@@ -27,7 +27,7 @@ $(document).ready(async function() {
 			$('#item').empty();
 
 			for (let i = 0; i < list.length; i++) {
-				await print('#item', 'a', list[i]);
+				await print('#item', 'a', '[ ' + list[i] + ' ]');
 			}
 		}
 
@@ -70,7 +70,7 @@ $(document).ready(async function() {
 		highlight(i);
 
 		$(document).on('mouseover', '#item a', function() {
-			var i = $(this).index();
+			i = $(this).index();
 
 			highlight(i);
 		});
@@ -100,6 +100,7 @@ $(document).ready(async function() {
 
 				case 13: // enter
 					i = $('#active').index();
+					var cat = Object.keys(item)[i];
 
 					query(cat);
 
