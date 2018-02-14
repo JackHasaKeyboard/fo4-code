@@ -3,21 +3,22 @@ $(document).ready(async function() {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
-	async function print(target, str) {
-		$(target).append('<a></a>');
+	async function print(target, tag, str) {
+		$(target).append('<' + tag + '></' + tag + '>');
 
 		for (var i = 0; i < str.length; i++) {
 			await sleep(20);
 
-			$(target + ' a:last-child').append(str[i]);
+			$(target).find(tag + ':last-child').append(str[i]);
 		}
 	}
 
+
+	await print('body', 'div', 'Welcome to ROBCO Industries (TM) Termlink');
+	await print('body', 'div', ' ');
+
+
 	$.getJSON('code.json', async function(item) {
-		await print('body', 'Welcome to ROBCO Industries (TM) Termlink');
-		await print('body', ' ');
-
-
 		$('body').append('<div id="item"></div>');
 
 		var list = Object.keys(item);
@@ -26,7 +27,7 @@ $(document).ready(async function() {
 			$('#item').empty();
 
 			for (let i = 0; i < list.length; i++) {
-				await print('#item', list[i]);
+				await print('#item', 'a', list[i]);
 			}
 		}
 
@@ -35,8 +36,8 @@ $(document).ready(async function() {
 		async function query(cat) {
 			$('#item').empty();
 
-			$('#item').append('=== ' + cat + ' ===');
-			$('#item').append(' ');
+			await print('#item', 'div', '=== ' + cat + ' ===');
+			await print('#item', 'div', ' ');
 
 			var name = Object.keys(item[cat]);
 
@@ -54,7 +55,7 @@ $(document).ready(async function() {
 				var entry = name[i];
 				var code = item[cat][entry];
 
-				await print('#item', entry + ' '.repeat((pad - entry.length) + 1) + code);
+				await print('#item', 'div', entry + ' '.repeat((pad - entry.length) + 1) + code);
 			}
 		}
 
