@@ -1,95 +1,84 @@
-$(document).ready(function() {
+$(document).ready(async function() {
 	function sleep(ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
-	async function print(c, i, t) {
-		await sleep(20 * t);
+	async function print(target, str) {
+		$(target).append('<a></a>');
 
-		$('a:nth-child(' + (i + 1) + ')').append(c);
+		for (var i = 0; i < str.length; i++) {
+			await sleep(20);
+
+			$(target + ' a:last-child').append(str[i]);
+		}
 	}
 
-
-	$('body').append('<header>Welcome to ROBCO Industries (TM) Termlink</header>');
-	$('body').append('<header> </header>');
-
-	$('body').append('<div id="item"></div>');
+	$.getJSON('code.json', async function(item) {
+		await print('body', 'Welcome to ROBCO Industries (TM) Termlink');
+		await print('body', ' ');
 
 
-	$.getJSON('code.json', function(item) {
-		function splash() {
+		$('body').append('<div id="item"></div>');
+
+		var list = Object.keys(item);
+
+		async function splash() {
 			$('#item').empty();
 
-			var l = 0;
-			var t = 0;
-
-			Object.keys(item).forEach(function(cat) {
-				$('#item').append('<a></a>');
-
-				for (var c = 0; c < cat.length; c++) {
-					t += 1;
-
-					print(cat[c], l, t);
-				}
-
-				l++;
-			});
+			for (let i = 0; i < list.length; i++) {
+				await print('#item', list[i]);
+			}
 		}
 
 		splash();
 
-
-		function query(i) {
-			var type = Object.keys(item)[i];
-			var code = item[type];
-
+		async function query(cat) {
 			$('#item').empty();
 
-			// $('#item').append('<a>=== ' + type +' ===</a>');
-			// $('#item').append('<a> </a>');
+			$('#item').append('=== ' + cat + ' ===');
+			$('#item').append(' ');
 
-			var maxLen = 0;
+			var name = Object.keys(item[cat]);
 
-			$.each(code, function(el) {
-				var len = el.length;
+			var pad = 0;
 
-				if (len > maxLen) {
-					maxLen = len;
+			for (let i = 0; i < name.length; i++) {
+				var entry = name[i];
+
+				if (entry.length > pad) {
+					pad = entry.length;
 				}
-			});
+			}
 
-			Object.keys(code).forEach(function(el, i) {
-				$('#item').append('<a>' + el + ' <span>' + code[el] + '</span></a>');
+			for (let i = 0; i < name.length; i++) {
+				var entry = name[i];
+				var code = item[cat][entry];
 
-				var len = el.length;
-
-				for (s = 0; s < (maxLen - len); s++) {
-					$('#item a:nth-child(' + (i + 1) + ') span').before(' ');
-				}
-			});
+				await print('#item', entry + ' '.repeat((pad - entry.length) + 1) + code);
+			}
 		}
 
 
 		var i = 0;
 
 		function highlight(i) {
-			$('a').removeAttr('id');
-			$('a:nth-child(' + (i + 1) + ')').attr('id', 'active');
+			$('#item a').removeAttr('id');
+			$('#item a:nth-child(' + (i + 1) + ')').attr('id', 'active');
 		}
 
 		highlight(i);
 
-
-		$('a').mouseover(function() {
+		$(document).on('mouseover', '#item a', function() {
 			var i = $(this).index();
 
 			highlight(i);
 		});
 
-		$('a').click(function() {
-			var i = $(this).index();
+		$(document).on('click', 'a', function() {
+			i = $(this).index();
+			var cat = Object.keys(item)[i];
 
-			query(i);
+			query(cat);
 		});
 
 		$(document).keydown(function(e) {
@@ -110,7 +99,8 @@ $(document).ready(function() {
 
 				case 13: // enter
 					i = $('#active').index();
-					query(i);
+
+					query(cat);
 
 					break;
 
