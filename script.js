@@ -7,12 +7,16 @@ $(document).ready(async function() {
 		$(target).append('<' + tag + '></' + tag + '>');
 
 		for (var i = 0; i < str.length; i++) {
-			await sleep(20);
+			if (crawl) {
+				await sleep(20);
+			}
 
 			$(target).find(tag + ':last-child').append(str[i]);
 		}
 	}
 
+
+	var crawl = true;
 
 	await print('body', 'div', 'Welcome to ROBCO Industries (TM) Termlink');
 	await print('body', 'div', ' ');
@@ -26,6 +30,8 @@ $(document).ready(async function() {
 		async function splash() {
 			$('#item').empty();
 
+			crawl = true;
+
 			for (let i = 0; i < list.length; i++) {
 				await print('#item', 'a', '[ ' + list[i] + ' ]');
 			}
@@ -35,6 +41,8 @@ $(document).ready(async function() {
 
 		async function query(cat) {
 			$('#item').empty();
+
+			crawl = true;
 
 			await print('#item', 'div', '=== ' + cat + ' ===');
 			await print('#item', 'div', ' ');
@@ -108,6 +116,11 @@ $(document).ready(async function() {
 
 				case 27: // esc
 					splash();
+
+					break;
+
+				case 16: // shift
+					crawl = false;
 
 					break;
 			}
