@@ -16,7 +16,7 @@ $(document).ready(async function() {
 	}
 
 
-	var mode = 'splash';
+	var mode;
 	var crawl = true;
 
 	await print('body', 'div', 'Welcome to ROBCO Industries (TM) Termlink');
@@ -44,17 +44,17 @@ $(document).ready(async function() {
 
 		splash();
 
-		async function query(cat) {
+		async function query(list) {
 			mode = 'query';
 
 			$('#item').empty();
 
 			crawl = true;
 
-			await print('#item', 'div', '=== ' + cat + ' ===');
+			await print('#item', 'div', '=== ' + list + ' ===');
 			await print('#item', 'div', ' ');
 
-			var name = Object.keys(item[cat]);
+			var name = Object.keys(item[list]);
 
 			var pad = 0;
 
@@ -70,12 +70,11 @@ $(document).ready(async function() {
 
 			for (let i = 0; i < name.length; i++) {
 				var entry = name[i];
-				var code = item[cat][entry];
+				var code = item[list][entry];
 
 				await print('#item', 'div', entry + ' '.repeat((pad - entry.length) + 1) + code);
 			}
 		}
-
 
 		var i = 0;
 
@@ -86,6 +85,7 @@ $(document).ready(async function() {
 
 		highlight(i);
 
+
 		$(document).on('mouseover', '#item a', function() {
 			i = $(this).index();
 
@@ -94,9 +94,9 @@ $(document).ready(async function() {
 
 		$(document).on('click', 'a', function() {
 			i = $(this).index();
-			var cat = Object.keys(item)[i];
+			var list = Object.keys(item)[i];
 
-			query(cat);
+			query(list);
 		});
 
 		$(document).keydown(function(e) {
@@ -117,9 +117,9 @@ $(document).ready(async function() {
 
 				case 13: // enter
 					i = $('#active').index();
-					var cat = Object.keys(item)[i];
+					var list = Object.keys(item)[i];
 
-					query(cat);
+					query(list);
 
 					break;
 
